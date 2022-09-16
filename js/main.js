@@ -1,84 +1,158 @@
-const saturate = document.getElementById('saturate');
-const contrast = document.getElementById('contrast');
-const brightness = document.getElementById('brightness');
-const sepia = document.getElementById('sepia');
-const grayscale = document.getElementById('grayscale');
-const blur = document.getElementById('blur');
-const hueRotate = document.getElementById('hue-rotate');
+/* Fisrt Project commponents (main nav) */
+const btn = document.getElementById('btn');
+const nav = document.getElementById('nav');
 
-const upload = document.getElementById('upload');
-const download = document.getElementById('download');
-const img = document.getElementById('img');
-
-const reset = document.querySelector('.reset');
-const imgBox = document.querySelector('.img-box');
-
-const canvas = document.getElementById('canvas');
-
-const ctx = canvas.getContext('2d')
-
-
-resetValue = ()=>{
-    img.style.filter = `none`;
-    ctx.filter = `none`;
-    saturate.value = '100';
-    brightness.value = '100';
-    contrast.value = '100';
-    sepia.value = '0';
-    grayscale.value = '0';
-    blur.value = '0';
-    hueRotate.value = '0';
-}
-
-window.onload = ()=>{
-    [download, reset, imgBox].map(item=>item.style.display = `none`)
-}
-
-upload.onchange = ()=>{
-    resetValue();
-    [download, reset, imgBox].map(item=>item.style.display = `block`);
-
-    let file = new FileReader();
-    file.readAsDataURL(upload.files[0]);
-    file.onload = _=>img.src = file.result;
-
-    img.onload = ()=>{
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx.drawImage(img,0,0, canvas.width, canvas.height);
-        img.style.display = `none`
-    }
-    
-}
-
-let filters = document.querySelectorAll('ul li input');
-
-filters.forEach(filter=>{
-    filter.addEventListener('input', ()=>{
-       /*  img.style.filter =`
-            saturate(${saturate.value}%)
-            contrast(${contrast.value}%)
-            brightness(${brightness.value}%)
-            sepia(${sepia.value}%)
-            grayscale(${grayscale.value})
-            blur(${blur.value}px)
-            hue-rotate(${hueRotate.value}deg)
-        ` */
-
-        ctx.filter =`
-            saturate(${saturate.value}%)
-            contrast(${contrast.value}%)
-            brightness(${brightness.value}%)
-            sepia(${sepia.value}%)
-            grayscale(${grayscale.value})
-            blur(${blur.value}px)
-            hue-rotate(${hueRotate.value}deg)
-        `
-        ctx.drawImage(img,0,0, canvas.width, canvas.height);
-    })
+btn.addEventListener('click',()=>{
+    nav.classList.toggle('active');
+    btn.classList.toggle('active');
 });
 
+/* Second Project commponents (Toast Notification) */
 
-download.onclick = ()=>{
-    download.href = canvas.toDataURL('image/jpeg');
+const notifyBtn = document.getElementById("notify-btn");
+const notifyContainer = document.getElementById('notify-container');
+
+notifyBtn.addEventListener('click', ()=>{
+    createNotification();
+});
+
+createNotification = _=> {
+        const notifyBox = document.createElement('div'); 
+        notifyBox.classList.add('notify-box');
+
+        notifyBox.innerText = 'This challenge is crazy';
+        notifyContainer.appendChild(notifyBox);
+        setTimeout(_=>{
+            notifyBox.remove();
+        },3000)
 }
+
+/* Third Project commponents (Auto Writing ) */
+const text = `Welcome to my website, My name is Ahmed.`;
+const autoTextContainer = document.getElementById('auto-text-container');
+
+let indx = 0;
+
+autoWriting = ()=>{
+    
+    
+    autoTextContainer.innerHTML = text.slice(0,indx);
+
+    indx++;
+
+    if (indx > text.length - 1){
+        indx = 0;
+    }
+}
+setInterval(autoWriting,100);
+
+/* Forth Project commponents (Popup button) */
+
+const popupBtnOpen = document.getElementById('popup-btn-open');
+const popupBtnClose = document.getElementById('popup-btn-close');
+const popupContainer = document.querySelector('.popup-container');
+const popupBox = document.querySelector('.popup');
+
+popupBtnOpen.addEventListener('click',()=>{
+    popupContainer.classList.add('active');
+    
+})
+popupBtnClose.addEventListener('click',()=>{
+    popupContainer.classList.remove('active');
+});
+
+/* Fifth Project ( Hearts rain )*/
+
+const heartsRain = document.querySelector('.hearts-rain');
+createHeart = ()=> {
+    const heart = document.createElement('div');
+    heart.classList.add('heart');
+    heart.style.left = `${Math.random()* 100}vw`;
+    heart.style.animationDirection = `${Math.random() * 2 + 3}s`;
+    heart.innerHTML = `&hearts;`;
+    heartsRain.appendChild(heart);
+    setTimeout(()=>{
+        heart.remove();
+    }, 5000);
+}
+
+/* Sixth Project ( Changing Background )*/
+const changeBgBtn = document.getElementById('change-bg-btn');
+
+changeBgBtn.addEventListener('click',_=>document.body.style.backgroundColor = randomBg());
+
+randomBg = _=>`hsl(${Math.floor(Math.random()* 360)}, 30%, 60%)`;
+
+/* Seventh Project ( Toggle Theme )*/
+
+const toggleTheme = document.getElementById('toggle-theme');
+
+toggleTheme.addEventListener('change',e=>{
+    document.body.classList.toggle('dark-mood', e.target.checked)
+});
+
+/* Eighth Project ( carousel )*/
+const carousel = document.querySelector('.carousel');
+const imgsContainer = document.getElementById('imgs-container');
+const carouselImgs = document.querySelectorAll('#imgs-container img');
+const navRight = document.querySelector('.nav-right');
+const navLeft = document.querySelector('.nav-left');
+
+const numOfItems = carouselImgs.length;
+const carouselWidth = carousel.clientWidth;
+const maxRight = carouselWidth * numOfItems;
+const minLeft = 0;
+const carouselTransform = imgsContainer.style.transform;
+
+let allPhotos = [...carouselImgs];
+
+
+(autoSlide = ()=>{
+
+    if (0 > imgsContainer.style.translateX ) {
+        imgsContainer.style.transform = `translateX(0px)`
+    }
+    if ( imgsContainer.style.translateX > maxRight ) {
+        imgsContainer.style.transform = `translateX(4000px)`
+    }
+    navLeft.addEventListener('click', ()=>{
+        imgsContainer.style.transform += `translateX(${carousel.clientWidth}px)`;  
+        /* belong to => Ninth Project ( sounds)*/
+        document.getElementById('pop').play();  
+    });
+    navRight.addEventListener('click', ()=>{
+        imgsContainer.style.transform += `translateX(${- carousel.clientWidth}px)`;      
+        /* belong to => Ninth Project ( sounds)*/  
+        document.getElementById('pop').play();             
+    });
+  
+
+})()
+
+
+/* Ninth Project ( sounds )*/
+// window.onload = ()=>{    
+//     setTimeout(()=>{document.getElementById('peace').play()},5000);
+// }
+
+/* Tenth Project ( Zooming )*/
+const zoom = document.getElementById('zoom');
+const zoomingImg = document.querySelector('#zoom img');
+
+zoom.addEventListener('mousemove',(e)=>{
+    const x = e.clientX - e.target.offsetLeft ;
+    const y = e.clientY - e.target.offsetTop + 700;
+
+    zoomingImg.style.transformOrigin = `${x}px ${y}px`;
+    zoomingImg.style.transform = `scale(1.5)`;
+    console.log(x);
+    console.log(y);
+});
+
+zoom.addEventListener('mouseleave', ()=>{
+
+    zoomingImg.style.transformOrigin = `center center`
+    zoomingImg.style.transform = `scale(1)`;
+})
+
+
